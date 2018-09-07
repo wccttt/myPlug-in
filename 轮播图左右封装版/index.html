@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图构造函数封装</title>
+    <link rel="stylesheet" href="css/index.css">
+
+</head>
+<body>
+<div id="outer" class="outer">
+    <div id="swiper" class="swiper">
+        <!--<div><img src="img/banner1.jpg" alt=""></div>-->
+        <!--<div><img src="img/banner2.jpg" alt=""></div>-->
+        <!--<div><img src="img/banner3.jpg" alt=""></div>-->
+        <!--<div><img src="img/banner4.jpg" alt=""></div>-->
+    </div>
+    <ul id="focus" class="focus">
+        <!--<li class="select"></li>-->
+        <!--<li></li>-->
+        <!--<li></li>-->
+        <!--<li></li>-->
+    </ul>
+    <a href="javascript:;" class="left"></a>
+    <a href="javascript:;" class="right"></a>
+</div>
+<div id="banner" class="banner">
+    <div  class="swiper">
+        <!--<div><img src="img/banner1.jpg" alt=""></div>-->
+        <!--<div><img src="img/banner2.jpg" alt=""></div>-->
+        <!--<div><img src="img/banner3.jpg" alt=""></div>-->
+        <!--<div><img src="img/banner4.jpg" alt=""></div>-->
+    </div>
+    <ul  class="focus">
+        <!--<li class="select"></li>-->
+        <!--<li></li>-->
+        <!--<li></li>-->
+        <!--<li></li>-->
+    </ul>
+    <a href="javascript:;" class="left"></a>
+    <a href="javascript:;" class="right"></a>
+</div>
+
+</body>
+</html>
+
+<script src="js/animate.js">
+</script>
+<script src="js/Banner2.js">
+</script>
+<script type="text/javascript">
+    window.onload=function () {
+            let banner=new Banner('outer','data.json',2000,1000);
+            banner.init().auto().focusClick().mouseMove().buttonClick();
+        let banner2=new Banner('banner','data.json',4000,3000);
+        banner2.init().auto().focusClick().mouseMove().buttonClick();
+
+    };
+    //图片过大的时候怎么办？
+    //Failed to load resource: net::ERR_INVALID_HTTP_RESPONSE
+    //个别时候报这个错误
+
+</script>
