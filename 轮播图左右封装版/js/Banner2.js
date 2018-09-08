@@ -13,6 +13,7 @@ window.Banner = function (id, url, duration, interval) {
     this.step = 0;
     //isClick解决鼠标多次点击的问题
     this.isClick = true;
+    this.width=utils.css(this.outer,'width');
     this.url = url;
     //时间间隔要大于运动时间
     if (duration > interval) [duration, interval] = [interval, duration];
@@ -20,10 +21,10 @@ window.Banner = function (id, url, duration, interval) {
     this.interval = interval || 2000;
 
     //解决浏览器最小化后图片轮播速度叠加的问题
-    document.addEventListener("visibilitychange",() =>{
-        if(document.visibilityState=="hidden"){
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState == "hidden") {
             clearInterval(this.timer);
-        }else {
+        } else {
             //单例模式可以不加
             clearInterval(this.timer);
             this.timer = setInterval(() => {
@@ -66,7 +67,7 @@ Banner.prototype.bindHTML = function () {
 
 
 };
-Banner.prototype.lazyImg=function() {
+Banner.prototype.lazyImg = function () {
     for (let i = 0; i < this.imgs.length; i++) {
         let cur = this.imgs[i];
         let oImg = new Image();
@@ -81,98 +82,98 @@ Banner.prototype.lazyImg=function() {
 
 };
 
-Banner.prototype.auto=function() {
-    let that=this;
+Banner.prototype.auto = function () {
+
     //这个地方还可以是哟个箭头函数来解决this指向问题
-    this.timer = setInterval(that.autoMove.bind(that),  that.interval);
+    this.timer = setInterval(()=>{
+        this.autoMove();
+    }, this.interval);
     return this;
 };
-Banner.prototype.autoMove=function() {
-let that=this;
+Banner.prototype.autoMove = function () {
+
     if (this.step >= this.data.length) {
         this.step = 0;
         utils.css(this.swiper, 'left', 0);
     }
     this.step++;
-    animate(that.swiper, {left: this.step * -1000}, that.duration, function () {
-        that.isClick = true;
+    animate(this.swiper, {left: this.step * -this.width}, this.duration,  ()=> {
+        this.isClick = true;
     });
     this.focusTip();
 
 
 };
 
-Banner.prototype.mouseMove=function(){
-    let that=this;
-    this.outer.onmouseenter = function () {
-        clearInterval(that.timer);
-        utils.css(that.left, 'display', 'block');
-        utils.css(that.right, 'display', 'block');
+Banner.prototype.mouseMove = function () {
+
+    this.outer.onmouseenter =  () =>{
+        clearInterval(this.timer);
+        utils.css(this.left, 'display', 'block');
+        utils.css(this.right, 'display', 'block');
     };
-        this.outer.onmouseleave = function () {
-            //用于清除遗留的定时器，防止速度叠加
-            clearInterval(that.timer);
-        that.timer = setInterval(that.autoMove.bind(that), that.interval);
-        utils.css(that.left, 'display', 'none');
-        utils.css(that.right, 'display', 'none');
+    this.outer.onmouseleave = ()=>{
+        //用于清除遗留的定时器，防止速度叠加
+        clearInterval(this.timer);
+        this.auto();
+        utils.css(this.left, 'display', 'none');
+        utils.css(this.right, 'display', 'none');
     };
     return this;
 };
-Banner.prototype.focusClick=function() {
-    let that=this;
+Banner.prototype.focusClick = function () {
     for (let i = 0; i < this.lis.length; i++) {
-        this.lis[i].onclick = function () {
-            that.step = i - 1;
-            that.autoMove()
+        this.lis[i].onclick = ()=> {
+            this.step = i - 1;
+            this.autoMove()
         }
     }
     return this;
 
 };
-Banner.prototype.focusTip=function () {
+Banner.prototype.focusTip = function () {
     for (let i = 0; i < this.lis.length; i++) {
         if (this.step === i) {
             this.lis[i].classList.add('select');
         } else {
             this.lis[i].classList.remove('select');
         }
-        if (this.step ===this.data.length) {
+        if (this.step === this.data.length) {
             this.lis[0].classList.add('select');
         }
     }
 
 };
- Banner.prototype.buttonClick=function(){
-    let that=this;
-    this.right.onclick = function () {
-        if (that.isClick) {
-            that.isClick = false;
-            that.autoMove();
+Banner.prototype.buttonClick = function () {
+
+    this.right.onclick =  ()=> {
+        if (this.isClick) {
+            this.isClick = false;
+            this.autoMove();
 
         }
 
     };
-    this.left.onclick = function () {
+    this.left.onclick =  ()=> {
 
-        if (that.isClick) {
-            that.isClick = false;
-            if (that.step <= 0) {
+        if (this.isClick) {
+            this.isClick = false;
+            if (this.step <= 0) {
+                this.step = this.data.length;
 
-                that.step = that.data.length;
-
-                utils.css(that.swiper, 'left', -1000 * that.step);
+                utils.css(this.swiper, 'left', -this.width * this.step);
 
             }
 
-            that.step--;
-            that.focusTip();
-            animate(that.swiper, {left: -1000 * that.step}, that.duration, function () {
-                that.isClick = true;
+            this.step--;
+            this.focusTip();
+            animate(this.swiper, {left: -this.width * this.step}, this.duration,  () =>{
+                this.isClick = true;
             });
         }
 
     };
-     return this;
+    return this;
 };
 
 Banner.prototype.init = function () {
